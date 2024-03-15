@@ -46,7 +46,7 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun setUI() {
+    fun setUI() {
         gameModel?.apply {
             binding.btn0.text = filledPos[0]
             binding.btn1.text = filledPos[1]
@@ -120,7 +120,7 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
                     winner = filledPos[i[0]]
                 }
             }
-
+            //if is draw
             if( filledPos.none(){ it.isEmpty() }){
                 gameStatus = GameStatus.FINISHED
             }
