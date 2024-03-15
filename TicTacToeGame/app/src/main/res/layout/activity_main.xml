@@ -16,7 +16,7 @@
         android:text="Tic Tac Toe"
         android:textStyle="bold"
         android:textSize="40sp"
-        android:textColor="#ffffe1"
+        android:textColor="@color/textPrimary"
         android:layout_margin="8dp"
         android:padding="8dp"/>
 
@@ -27,7 +27,7 @@
         android:background="@drawable/btn_background"
         android:text="Play Offline"
         android:textSize="18dp"
-        android:textColor="#ffffe1"
+        android:textColor="@color/textPrimary"
         android:layout_margin="16dp"
         android:padding="8dp"/>
 
