@@ -11,6 +11,8 @@ import com.kornyisdeveloping.tictactoe.databinding.ActivityGameBinding
 class GameActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var binding: ActivityGameBinding
+
+    private var gameModel : GameModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
@@ -31,10 +33,29 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
             startGame()
         }
 
+        GameData.gameModel.observe(this) {
+            gameModel = it
+            setUI()
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+    private fun setUI() {
+        gameModel?.apply {
+            binding.btn0.text = filledPos[0]
+            binding.btn1.text = filledPos[1]
+            binding.btn2.text = filledPos[2]
+            binding.btn3.text = filledPos[3]
+            binding.btn4.text = filledPos[4]
+            binding.btn5.text = filledPos[5]
+            binding.btn6.text = filledPos[6]
+            binding.btn7.text = filledPos[7]
+            binding.btn8.text = filledPos[8]
         }
     }
 
