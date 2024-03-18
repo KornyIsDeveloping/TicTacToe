@@ -24,6 +24,8 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         enableEdgeToEdge()
         setContentView(binding.root)
 
+        GameData.fetchGameModel()
+
         binding.btn0.setOnClickListener(this)
         binding.btn1.setOnClickListener(this)
         binding.btn2.setOnClickListener(this)
@@ -75,10 +77,18 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     GameStatus.INPROGRESS -> {
                         binding.startGameBtn.visibility = View.INVISIBLE
-                        currentPlayer + " turn"
+                        when(GameData.myId) {
+                            currentPlayer -> "Your turn"
+                            else -> currentPlayer + " turn"
+                        }
                     }
                     GameStatus.FINISHED -> {
-                        if(winner.isNotEmpty()) winner + " Won!"
+                        if(winner.isNotEmpty()) {
+                            when(GameData.myId) {
+                                winner -> "You won!"
+                                else -> winner + " won!"
+                            }
+                        }
                         else "Draw!"
                     }
                 }
@@ -206,6 +216,10 @@ fun startGame() {
                 return;
             }
             //game in progress
+            if(gameId != "-1" && currentPlayer != GameData.myId) {
+                Toast.makeText(applicationContext, "Not your turn", Toast.LENGTH_SHORT).show()
+                return;
+            }
             val clickedPos = (v?.tag as String).toInt()
             if(filledPos[clickedPos].isEmpty()) {
                 filledPos[clickedPos] = currentPlayer
@@ -213,7 +227,7 @@ fun startGame() {
                 checkForWinner()
                 updateGameData(this)
             }
-            if (!isWinnerFound() && !isBoardFull()) {
+            if (!isMultiplayer && !isWinnerFound() && !isBoardFull()) {
                 botMoveWithDelay()
             }
         }

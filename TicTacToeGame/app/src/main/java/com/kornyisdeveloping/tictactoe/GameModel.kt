@@ -7,7 +7,8 @@ data class GameModel (
     var filledPos : MutableList<String> = mutableListOf("", "", "", "", "", "", "", "", ""),
     var winner : String = "",
     var gameStatus : GameStatus = GameStatus.CREATED,
-    var currentPlayer : String = "X"
+    var currentPlayer : String = "X",
+    var isMultiplayer: Boolean = false
 //    var currentPlayer : String = (arrayOf("X", "O")) [Random.nextInt(2)]
 )
 

@@ -6,6 +6,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.kornyisdeveloping.tictactoe.databinding.ActivityMainBinding
 import kotlin.random.Random
 
@@ -40,37 +42,50 @@ class MainActivity : AppCompatActivity() {
     fun createOfflineGame() {
         GameData.saveGameModel(
             GameModel(
-                gameStatus = GameStatus.JOINED
+                gameStatus = GameStatus.JOINED,
+                isMultiplayer = false
             )
         )
         startGame()
     }
 
     fun createOnlineGame() {
-//        GameData.saveGameModel(
-//            GameModel(
-//                gameStatus = GameStatus.CREATED
-//                gameId = Random.nextInt(1000..9999).toString()
-//            )
-//        )
-//        startGame()
         GameData.myId = "X"
-        val newGameId = Random.nextInt().toString()  // Generate a new game ID as a string
+        val newGameId = Random.nextInt(1000, 9999).toString()  // Generate a new game ID as a string
         GameData.saveGameModel(
             GameModel(
                 gameId = newGameId,  // Set the new game ID here
                 gameStatus = GameStatus.CREATED,
+                isMultiplayer = true,
                 filledPos = mutableListOf("", "", "", "", "", "", "", "", ""),
                 winner = "",
                 currentPlayer = "X"
-                // Other properties can be set here as well
             )
         )
         startGame()
     }
 
     fun joinOnlineGame() {
-
+        var gameId = binding.gameIdInput.text.toString()
+        if(gameId.isEmpty()) {
+            binding.gameIdInput.setError("Please enter the game Id")
+            return
+        }
+        GameData.myId = "O"
+        Firebase.firestore.collection("games")
+            .document(gameId)
+            .get()
+            .addOnSuccessListener {
+                val model = it?.toObject(GameModel::class.java)
+                if(model == null) {
+                    binding.gameIdInput.setError("Please enter a valid game Id")
+                }else{
+                    model.gameStatus = GameStatus.JOINED
+                    model.isMultiplayer = true
+                    GameData.saveGameModel(model)
+                    startGame()
+                }
+            }
     }
 
     fun startGame() {
